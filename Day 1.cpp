@@ -72,7 +72,6 @@ int sumOfCalibrationValues(std::vector<std::string> calibration_document ) {
 		std::sregex_iterator end;
 		while (it != end) {
 			std::smatch match = *it;
-			//std::cout << "Match found: " << match[1] << std::endl;
 			if (string_to_int_map.count(match[1]) > 0) {
 				integers_from_line += string_to_int_map[match[1]];
 			}
@@ -81,24 +80,10 @@ int sumOfCalibrationValues(std::vector<std::string> calibration_document ) {
 			}
 			++it;
 		}
-		// Iterate over matches in the input string
-		/*auto it = calibration_string.cbegin();
-		while (std::regex_search(it, calibration_string.cend(), matches, pattern)) {
-			// Print the matched substring
-			if (string_to_int_map.count(matches[0]) > 0) {
-				integers_from_line += string_to_int_map[matches[0]];
-			}
-			else {
-				integers_from_line += matches[0];
-			}
-			// Move the iterator to the next position after the match
-			it = matches.suffix().first;
-		}*/
 		integers_from_doc.push_back(integers_from_line);
 	}
 	int sum = 0;
 	for (std::string& line : integers_from_doc) {
-		//std::cout << "Integer line is : " << line << "\n";
 		std::string vals;
 		if (line.size() > 1) {
 			char first = line[0];
@@ -114,7 +99,6 @@ int sumOfCalibrationValues(std::vector<std::string> calibration_document ) {
 			tmp_vals += last;
 			vals = tmp_vals;
 		}
-		//std::cout << "Value is :" << vals <<"\n";
 		sum = sum+ convertCharToInt(vals);
 	}
 
@@ -127,14 +111,3 @@ int main()
 	auto data = read_file(file_name);
 	std::cout<<sumOfCalibrationValues(data);
 }
-
-// Run program: Ctrl + F5 or Debug > Start Without Debugging menu
-// Debug program: F5 or Debug > Start Debugging menu
-
-// Tips for Getting Started: 
-//   1. Use the Solution Explorer window to add/manage files
-//   2. Use the Team Explorer window to connect to source control
-//   3. Use the Output window to see build output and other messages
-//   4. Use the Error List window to view errors
-//   5. Go to Project > Add New Item to create new code files, or Project > Add Existing Item to add existing code files to the project
-//   6. In the future, to open this project again, go to File > Open > Project and select the .sln file
