@@ -1,22 +1,9 @@
-// Day 5.cpp : This file contains the 'main' function. Program execution begins and ends there.
-//
-
 #include <iostream>
 #include <string> 
 #include <vector>
 #include <fstream>
 #include <sstream>
-#include <cmath>
-#include <set>
-#include <map>
-#include <algorithm>
-#include <climits>
-#include <queue>
-#include <cctype>
-#include <regex>
-#include <tuple>
 #include <chrono>
-
 class Map {
 private:
 	std::vector<std::vector<long long>> maps;
@@ -38,8 +25,6 @@ public:
 		return seed;
 	}
 	std::vector<std::pair<long long, long long>> mapInterval(std::pair< long long, long long > interval) {
-
-		//std::cout << "Mapping interval " << "(" << interval.first << "," << interval.second << ")" << std::endl;
 		std::vector<std::pair<long long, long long>> mapped_intervals;
 		long long lower = interval.first;
 		long long upper = interval.second;
@@ -50,7 +35,6 @@ public:
 			// if [lower,upper] \subseteq [source_range_start, source_range_start + range_length-1] 
 			// then map to the interval [destination_range_start+lower-source_range_start, destination_range_start+upper-source_range_start]
 			if (source_range_start <= lower && upper <= source_range_start + range_length-1) {
-				//std::cout << "The interval is contained in one of the maps\n";
 				std::pair<long long, long long> new_interval 
 					= { destination_range_start + lower - source_range_start,destination_range_start + upper - source_range_start };
 				mapped_intervals.push_back(new_interval);
@@ -61,7 +45,6 @@ public:
 					\cup [destination_range_start, destination_range_start + range_length-1]
 					\cup f([source_range_start+range_length,upper])*/
 			if (lower < source_range_start && source_range_start + range_length <= upper) {
-				//std::cout << "The interval contains one of the maps\n";
 				std::pair<long long, long long> new_interval 
 					= { destination_range_start, destination_range_start + range_length -1}; 
 				std::pair<long long, long long> unmapped_lower_interval = { lower,source_range_start - 1 };
@@ -83,14 +66,11 @@ public:
 					\cup [destination_range_start, destination_range_start + upper - source_range_start]
 					*/
 			if (lower < source_range_start && upper >= source_range_start && upper < source_range_start + range_length) {
-				//std::cout << "The interval intersects one of the maps  on the lower piece " << "("<<source_range_start <<","<< upper <<
-					//")"<<std::endl;
 				std::pair<long long, long long> unmapped_interval 
 					= { lower, source_range_start - 1 };
 				std::pair<long long, long long> new_interval 
 					= { destination_range_start, destination_range_start + upper - source_range_start };
 				auto re_mapped_intervals = mapInterval(unmapped_interval);
-				//std::cout << "The intersected part maps to (" << new_interval.first << "," << new_interval.second << ")" << std::endl;
 				mapped_intervals.push_back(new_interval);
 				mapped_intervals.insert(mapped_intervals.end(), re_mapped_intervals.begin(), re_mapped_intervals.end());
 				return mapped_intervals;
@@ -100,7 +80,6 @@ public:
 					\cup f([source_range_start+range_length,upper])
 					*/
 			if (source_range_start <= lower && lower <source_range_start+range_length && source_range_start + range_length <= upper) {
-				//std::cout << "The interval intersects one of the map on the upper piece\n";
 				std::pair<long long, long long> unmapped_interval 
 					= { source_range_start+range_length, upper };
 				std::pair<long long, long long> new_interval 
@@ -126,7 +105,6 @@ public:
 		}
 	}
 };
-
 std::vector<std::string> readFile(std::string str) {
 	std::vector< std::string > input;
 	std::ifstream inputFile(str);
@@ -207,12 +185,10 @@ std::vector < Map > generateMaps(std::vector< std::string > input) {
 		auto it = std::find(input[index].begin(), input[index].end(), targetChar);
 		// If string contains the character : then it is the header of a map.
 		if (it != input[index].end()) {
-			//std::cout << "Found map! : " << input[index] << "\n";
 			//If it is a header of a map we proceed with gathering all the maps until we encounter another header
 			int map_index = index + 1;
 			std::vector< std::vector<long long> > map_values;
 			while (map_index < input.size() && containsNumeric(input[map_index])) {
-				//std::cout << "Map: " << input[map_index] << "\n";
 				auto map_values_string = splitString(input[map_index], ' ');
 				auto map_value = convertToIntVector(map_values_string);
 				map_values.push_back(map_value);
@@ -239,33 +215,21 @@ std::vector<long long> findLocations(std::vector<Map> maps, std::vector< long lo
 	}
 	return locations; 
 }
-
-
 std::vector<std::pair<long long, long long> > findLocationsIntervals(std::vector<Map> maps, std::vector< std::pair<long long,long long>> seeds_intervals) {
 	std::vector<std::pair<long long, long long> > intervals = seeds_intervals;
 	for (Map& map : maps) {
 		std::vector<std::pair<long long, long long> > tmp_intervals;
 		for (auto& interval : intervals) {
-			//std::cout << "Mapping the interval " << "(" << interval.first << "," << interval.second << ")" <<std::endl;
 			auto new_intervals = map.mapInterval(interval);
-			//std::cout << "maps to " << std::endl;
 			for (auto& new_interval : new_intervals) {
-				//std::cout << "(" << new_interval.first << "," << new_interval.second << ") " << std::endl;
 				tmp_intervals.push_back(new_interval);
 			}
-			//std::cout << " by map " << std::endl;
-			//map.printMap();
 		}
 		intervals = tmp_intervals;
 	}
 	return intervals;
 }
-
-
-
-
 int main(){
-
 	auto start_time = std::chrono::high_resolution_clock::now();
 	std::string input = "input.txt";
 	auto data = readFile(input);
@@ -274,36 +238,23 @@ int main(){
 	// generate seeds
 	auto seeds = convertToIntVector(seed_data);
 	std::vector<std::pair<long long, long long> > seed_intervals;
-	//std::cout << std::endl;
 	for (int i = 0; i < seeds.size()-1; i=i+2) {
 		std::pair<long long, long long> new_interval;
 		new_interval.first = seeds[i];
 		new_interval.second = seeds[i] + seeds[i+1] - 1;
 		seed_intervals.push_back(new_interval);
 	}
-
 	//generate maps
 	std::vector<Map> maps = generateMaps(data);
 	long long minimal_loc = 9223372036854775807LL;
 	std::vector<std::pair<long long, long long> > test_interval; 
-	//test_interval.push_back(seed_intervals[0]);
-	//findLocationsIntervals(maps, test_interval);
-	//for (auto interval : seed_intervals) {
-	//	std::cout << "Intervals to be mapped: (" << interval.first << "," << interval.second << ")" << std::endl;
-	//}
-
 
 	auto final_intervals = findLocationsIntervals(maps, seed_intervals);
-	//std::cout << " Number of final intervals : " << final_intervals.size() << std::endl;
 	for (auto& interval : final_intervals) {
-		//std::cout << "(" << interval.first << "," << interval.second << ")\n";
 		minimal_loc = std::min(minimal_loc, interval.first); 
 		
 	}
 	std::cout <<"Minimal location: "<< minimal_loc << std::endl; //Wrong answer: 52752791, 206777808 Correct answer: 136096660 
-
-	//std::cout << "Test: " << findLocations(maps, { 0 })[0] <<std::endl;
-
 	// Stop measuring time
 	auto end_time = std::chrono::high_resolution_clock::now();
 	// Calculate the duration in microseconds
