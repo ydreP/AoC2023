@@ -3,16 +3,8 @@
 #include <vector>
 #include <fstream>
 #include <sstream>
-#include <cmath>
-#include <set>
 #include <map>
 #include <algorithm>
-#include <climits>
-#include <queue>
-#include <cctype>
-#include <regex>
-#include <tuple>
-
 std::map< char, int> card_order = {
 	{'J',1},
 	{'2',2},
@@ -93,15 +85,12 @@ std::vector<Hand> generateHands(std::vector<std::string> data) {
 	for (auto& line : data) {
 		std::vector<std::string> hand_and_bid = splitString(line, ' ');
 		Hand hand;
-		//std::cout << hand_and_bid[0] << " " << hand_and_bid[1]<< "\n";
-
 		hand.hand = hand_and_bid[0];
 		hand.bid = convertStringToInt(hand_and_bid[1]);
 		hands.push_back(hand);
 	}
 	return hands;
 }
-
 int determineType(Hand hand) {
 	std::map<char, int> count;
 	char joker = 'J';
@@ -111,43 +100,34 @@ int determineType(Hand hand) {
 	auto it = count.find(joker);
 
 	if (it != count.end() ) {
-		//std::cout << hand.hand << " has a joker!";
 		//if there is a joker and there is only one or two type of cards then this hand is 5 of a kind
 		if (count.size() == 1 || count.size() == 2) {
-			//std::cout << " and is 5 of a kind! \n";
 			return 7;
 		}
-		
 		//if there is a joker and there are three types of cards 
 		if (count.size() == 3) {
 			for (auto& key_val : count) {
 				// we either have three of a kind and in this case the joker makes this four of a kind 
 				if (key_val.second == 3) {
-					//std::cout << " and is 4 of a kind! \n";
 					return 6;
 				}
 			}
 			// or two pairs, which either makes this a four of a kind or a full house
 			// if we have two jokers then we can make this a four of a kind
 			if (count[joker] == 2) {
-				//std::cout << " and is 4 of a kind! \n";
 				return 6;
 			}
 			//if we only have one joker then we can only make this a full house
 			else if (count[joker] == 1) {
-				//std::cout << " and is a full house! \n";
 				return 5;
 			}
-
 		}
 		//if there is a joker and there are four types of cards then this hand is a three of a kind
 		if (count.size() == 4) {
-			//std::cout << " and is 3 of a kind! \n";
 			return 4;
 		}
 		//if there is a joker and there are 5 types of cards then this hand is a pair
 		if (count.size() == 5) {
-			//std::cout << " and is a pair! \n";
 			return 2;
 		}
 	} else {
@@ -177,7 +157,6 @@ int determineType(Hand hand) {
 		if (count.size() == 5) {
 			return 1;
 		}
-
 	}
 	return 0;
 }
@@ -211,8 +190,6 @@ bool compareHands(Hand hand_1, Hand hand_2) {
 		}
 	}
 }
-
-
 std::vector<Hand> rankHands(std::vector<Hand> unsorted) {
 	auto arr = unsorted;
 
@@ -233,7 +210,6 @@ std::vector<Hand> rankHands(std::vector<Hand> unsorted) {
 	}
 	return arr;
 }
-
 int totalWinnings(std::vector<Hand> hands) {
 	int winnings = 0;
 	for (int i = 0; i < hands.size(); i++) {
@@ -241,7 +217,6 @@ int totalWinnings(std::vector<Hand> hands) {
 	}
 	return winnings;
 }
-
 int main(){
 	std::string input = "input.txt";
 	auto data = readFile(input);
@@ -251,52 +226,5 @@ int main(){
 		determineType(hand);
 	}
 	auto sorted_hands = rankHands(hands);
-	std::cout << totalWinnings(sorted_hands); // Wrong answer is : 251436044 246944544
-
-	//std::cout << "Hands in sorted order are: \n";
-	//for (auto& hand : sorted_hands) {
-	//	std::cout << hand.hand << "\n";
-	//}
-
+	std::cout << totalWinnings(sorted_hands); 
 }
-
-
-
-
-
-/*
-
-Every hand is exactly one type. From strongest to weakest, they are:
-
-Five of a kind, where all five cards have the same label: AAAAA
-Four of a kind, where four cards have the same label and one card has a different label: AA8AA
-Full house, where three cards have the same label, and the remaining two cards share a different label: 23332
-Three of a kind, where three cards have the same label, and the remaining two cards are each different from any other card in the hand: TTT98
-Two pair, where two cards share one label, two other cards share a second label, and the remaining card has a third label: 23432
-One pair, where two cards share one label, and the other three cards have a different label from the pair and each other: A23A4
-High card, where all cards' labels are distinct: 23456
-Hands are primarily ordered based on type; for example, every full house is stronger than any three of a kind.
-
-To make things a little more interesting, the Elf introduces one additional rule. 
-Now, J cards are jokers - wildcards that can act like whatever card would make the hand the strongest type possible.
-To balance this, J cards are now the weakest individual cards, weaker even than 2. 
-The other cards stay in the same order: A, K, Q, T, 9, 8, 7, 6, 5, 4, 3, 2, J.
-J cards can pretend to be whatever card is best for the purpose of determining hand type; for example, 
-QJJQ2 is now considered four of a kind. However, for the purpose of breaking ties between two hands of the same type, 
-J is always treated as J, not the card it's pretending to be: JKKK2 is weaker than QQQQ2 because J is weaker than Q.
-
-Now, the above example goes very differently:
-
-32T3K 765
-T55J5 684
-KK677 28
-KTJJT 220
-QQQJA 483
-32T3K is still the only one pair; it doesn't contain any jokers, so its strength doesn't increase.
-KK677 is now the only two pair, making it the second-weakest hand.
-T55J5, KTJJT, and QQQJA are now all four of a kind! T55J5 gets rank 3, QQQJA gets rank 4, and KTJJT gets rank 5.
-With the new joker rule, the total winnings in this example are 5905.
-
-Using the new joker rule, find the rank of every hand in your set. What are the new total winnings?
-
-*/
