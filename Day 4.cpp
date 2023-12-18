@@ -1,19 +1,8 @@
-// Day 2.cpp : This file contains the 'main' function. Program execution begins and ends there.
 #include <iostream>
 #include <string> 
 #include <vector>
 #include <fstream>
 #include <sstream>
-#include <cmath>
-#include <set>
-#include <map>
-#include <algorithm>
-#include <climits>
-#include <queue>
-#include <cctype>
-#include <regex>
-#include <tuple>
-
 std::vector<std::string> readFile(std::string str) {
 	std::vector< std::string > input;
 	std::ifstream inputFile(str);
@@ -73,9 +62,7 @@ returns a pair of vectors of the form
 std::pair< std::vector<std::string>, std::vector<std::string> > parseCard(std::string raw_card) {
 	std::pair< std::vector<std::string>, std::vector<std::string> > card;
 	auto split_raw_card = splitString(raw_card, ':').back();
-	//std::cout << split_raw_card << "\n";
 	auto card_numbers = splitString(split_raw_card, '|');
-	//std::cout << card_numbers[0] << " " << card_numbers[1] << "\n";
 	auto winning_numbers_with_white_space = splitString(card_numbers[0],' ');
 	auto numbers_you_have_with_white_space = splitString(card_numbers[1],' ');
 	std::vector<std::string > winning_numbers;
@@ -84,12 +71,8 @@ std::pair< std::vector<std::string>, std::vector<std::string> > parseCard(std::s
 	for (std::string& winning_number : winning_numbers_with_white_space) {
 
 		if (winning_number.length() != 0) {
-			//std::cout << "Is numeric : " << winning_number << "\n";
 			winning_numbers.push_back(winning_number);
 		}
-		//else {
-		//	std::cout << "Is white space : " << winning_number << "\n";
-		//}
 	}
 	for (std::string& number_you_have : numbers_you_have_with_white_space) {
 		if (number_you_have.length() != 0) {
@@ -114,26 +97,18 @@ int computeCardPoints(std::vector< std::string> cards) {
 		auto winning_and_own_numbers = parseCard(card);
 		auto winning_numbers = winning_and_own_numbers.first;
 		auto own_numbers = winning_and_own_numbers.second; 
-		//std::cout << "Card " << card_number << "\n";
 		int number_of_matches = 0;
 		for (std::string& own_number : own_numbers) {
-			//std::cout << "Checking own number: " << own_number << "\n";
 			for (std::string& winning_number : winning_numbers) {
-				//std::cout << " checking winning number: " << winning_number;
 				if (own_number == winning_number) {
-					//std::cout << " it's a match! \n";
 					number_of_matches++;
 				}
-				//else {
-				//	std::cout << " no match! \n";
-				//}
 			}
 		}
 		if (number_of_matches > 0 && card_number <cards.size()-1) {
 			for (int i = 1; i <= number_of_matches; i++) {
 				number_of_cards[card_number + i]+= number_of_cards[card_number ];
 			}
-			//points += pow(2, number_of_matches - 1);
 		}
 
 		card_number++;
@@ -143,7 +118,6 @@ int computeCardPoints(std::vector< std::string> cards) {
 	}
 	return points;
 }
-
 int main() {
 	std::string input = "input.txt";
 	std::vector< std::string> cards = readFile(input);
