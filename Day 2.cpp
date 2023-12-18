@@ -1,19 +1,9 @@
-// Day 2.cpp : This file contains the 'main' function. Program execution begins and ends there.
 #include <iostream>
 #include <string> 
 #include <vector>
-#include <fstream>
 #include <sstream>
-#include <cmath>
-#include <set>
 #include <map>
-#include <algorithm>
-#include <climits>
-#include <queue>
-#include <cctype>
 #include <regex>
-#include <tuple>
-
 std::vector<std::string> readFile(std::string str) {
 	std::vector< std::string > input;
 	std::ifstream inputFile(str);
@@ -56,7 +46,6 @@ int convertStringToInt(std::string intString) {
 	}
 	return char_val;
 }
-
 bool isNumber(std::string intString) {
 	for (char& digit : intString) {
 		if (!isdigit(digit)) {
@@ -65,8 +54,6 @@ bool isNumber(std::string intString) {
 	}
 	return true;
 }
-
-
 int getGameID(std::string raw_game_data) {
 	std::regex pattern("\\d+");
 	std::string game_id;
@@ -79,7 +66,6 @@ int getGameID(std::string raw_game_data) {
 	}
 	return convertStringToInt(game_id);
 }
-
 std::pair<std::string, int> getDraw(std::string raw_draw_data) {
 	std::pair<std::string, int> draw;
 	std::string pattern_string = "blue|red|green|\\d+";
@@ -96,12 +82,8 @@ std::pair<std::string, int> getDraw(std::string raw_draw_data) {
 		}
 		++it;
 	}
-
-
 	return draw;
 }
-
-
 int computeGames(std::vector<std::string> games, bool part_2) {
 	std::map<std::string, int> allowed_values = { {"red",12}, {"green",13} ,{"blue",14} };
 	int sum = 0;
@@ -110,24 +92,18 @@ int computeGames(std::vector<std::string> games, bool part_2) {
 		int product = 1;
 		auto split_game = splitString(game, ':');
 		int game_id = getGameID(split_game[0]);
-		//std::cout << "Game " << game_id << "\n";
 		auto raw_rounds = splitString(split_game[1], ';');
 		int turn = 1;
 		bool possible_game = true;
 		for (std::string& raw_round : raw_rounds) {
 			auto round = splitString(raw_round, ',');
-			//std::cout << "Round " << turn << " is playing. \n";
-			//std::cout << "Elf draws ";
 			for (auto& draw_data : round) {
 				auto draw = getDraw(draw_data);
 				minimal_values[draw.first] = std::max(minimal_values[draw.first], draw.second);
-				//std::cout << draw.first << " " << draw.second<< " ";
 				if (draw.second > allowed_values[draw.first]) {
 					possible_game = false;
 				}
-
 			}
-			//std::cout<< "from the bag \n";
 			turn++;
 		}
 		for (const auto& key_val : minimal_values) {
@@ -139,7 +115,6 @@ int computeGames(std::vector<std::string> games, bool part_2) {
 		}
 		else {
 			if (possible_game) {
-				//std::cout << "Game " << game_id << " is possible \n";
 				sum += game_id;
 			}
 		}
@@ -148,12 +123,8 @@ int computeGames(std::vector<std::string> games, bool part_2) {
 	return sum;
 }
 
-
-
 int main() {
 	std::string input = "input.txt";
 	std::vector<std::string> games = readFile(input);
 	std::cout << "Sum of allowed games are : " << computeGames(games,true);
-
-
 }
