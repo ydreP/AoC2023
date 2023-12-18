@@ -1,19 +1,8 @@
-// Day 2.cpp : This file contains the 'main' function. Program execution begins and ends there.
 #include <iostream>
 #include <string> 
 #include <vector>
 #include <fstream>
 #include <sstream>
-#include <cmath>
-#include <set>
-#include <map>
-#include <algorithm>
-#include <climits>
-#include <queue>
-#include <cctype>
-#include <regex>
-#include <tuple>
-
 std::vector<std::string> readFile(std::string str) {
 	std::vector< std::string > input;
 	std::ifstream inputFile(str);
@@ -56,7 +45,6 @@ int convertStringToInt(std::string intString) {
 	}
 	return char_val;
 }
-
 bool isNumber(std::string intString) {
 	for (char& digit : intString) {
 		if (!isdigit(digit)) {
@@ -65,7 +53,6 @@ bool isNumber(std::string intString) {
 	}
 	return true;
 }
-
 int findNumber(std::vector<std::string>& schematic, std::vector<std::vector<bool> >& already_counted, int row, int col) {
 	int value;
 	int rows = schematic.size();
@@ -92,7 +79,6 @@ int computePartNumber(std::vector<std::string> schematic) {
 	int rows = schematic.size();
 	int columns = schematic[0].size();
 	std::vector<std::vector<bool> > already_counted( rows, std::vector<bool>(columns, false) );
-
 	std::vector<std::vector<int> > shifts = { { -1,-1}, {-1,0},{-1,1},{1,1},{1,0},{1,-1},{0,-1},{0,1}};
 	for (int row = 0; row < rows; row++) {
 		for (int col = 0; col < columns; col++) {
@@ -108,14 +94,10 @@ int computePartNumber(std::vector<std::string> schematic) {
 						if (isdigit(schematic[shifted_row][shifted_col]) && !already_counted[shifted_row][shifted_col] )  {
 							adjacency_number++;
 							part_prod =part_prod* findNumber(schematic, already_counted, shifted_row, shifted_col);
-							//part_number += findNumber(schematic, already_counted, shifted_row, shifted_col);
-							//std::cout << "Found adjacent number " << findNumber(schematic, already_counted,shifted_row, shifted_col) << "\n";
-							//std::cout << already_counted[shifted_row][shifted_col] << "\n";
 						}
 					}
 				}
 				if (adjacency_number == 2) {
-					std::cout << "Row  and column " << "(" << row << "," << col << ") is a gear with ratio " << part_prod << "\n";
 					part_number += part_prod;
 				}
 
@@ -125,13 +107,8 @@ int computePartNumber(std::vector<std::string> schematic) {
 	return part_number;
 }
 
-
-
 int main(){
 	std::string input = "input.txt";
 	std::vector<std::string> schematic = readFile(input);
 	std::cout<< computePartNumber(schematic);
-
-
-
 }
