@@ -1,22 +1,9 @@
-// Day 9.cpp : This file contains the 'main' function. Program execution begins and ends there.
-//
 #include <iostream>
 #include <string> 
 #include <vector>
 #include <fstream>
 #include <sstream>
-#include <cmath>
-#include <set>
-#include <map>
-#include <algorithm>
-#include <climits>
-#include <queue>
-#include <cctype>
-#include <regex>
-#include <tuple>
-#include <numeric>
 #include <stack>
-
 std::vector<std::string> readFile(std::string str) {
 	std::vector< std::string > input;
 	std::ifstream inputFile(str);
@@ -48,7 +35,6 @@ int convertStringToInt(std::string intString) {
 	int char_val = 0;
 	char shift = '0';
 	int string_size = intString.size();
-
 	if (intString[0] == '-') {
 		for (int i = 1; i < string_size; i++) {
 			if (!isdigit(intString[i])) {
@@ -60,10 +46,8 @@ int convertStringToInt(std::string intString) {
 			}
 		}
 		return -char_val;
-
 	}
 	else {
-
 		for (int i = 0; i < string_size; i++) {
 			if (!isdigit(intString[i])) {
 				std::cout << "string not correctly formated, encountered non-integer at position  : " << i << " and value " << intString[i] << "\n";
@@ -104,15 +88,12 @@ bool isZero(std::vector<int> vector) {
 	}
 	return true;
 }
-
 void printVector(std::vector<int> vec) {
 	for (int& val : vec) {
 		std::cout << val << " ";
 	}
 	std::cout << std::endl; 
 }
-
-
 int predict(std::vector< int> historical_data) {
 	int predicted_value = 0;
 	std::stack<std::vector<int>> stack_of_diff;
@@ -127,13 +108,10 @@ int predict(std::vector< int> historical_data) {
 		stack_of_diff.pop();
 		//stack_of_diff.top().push_back(stack_of_diff.top().back() + top_elem.back()); // part 1
 		stack_of_diff.top().insert(stack_of_diff.top().begin(), stack_of_diff.top()[0] - top_elem[0]); // part 2
-
 	}
-
 	//return stack_of_diff.top().back(); // part 1
 	return stack_of_diff.top()[0];  // part 2
 }
-
 int sumOfExtrapolations(std::vector<std::vector<int>> historical_datas ) {
 	int sum = 0;
 	for (auto& historical_data : historical_datas) {
@@ -141,8 +119,6 @@ int sumOfExtrapolations(std::vector<std::vector<int>> historical_datas ) {
 	}
 	return sum;
 }
-
-
 int main() {
 	std::string input = "input.txt";
 	auto data = readFile(input);
