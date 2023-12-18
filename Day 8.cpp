@@ -1,22 +1,10 @@
-// Day 8.cpp : This file contains the 'main' function. Program execution begins and ends there.
-//
 #include <iostream>
 #include <string> 
 #include <vector>
 #include <fstream>
 #include <sstream>
-#include <cmath>
-#include <set>
 #include <map>
-#include <algorithm>
-#include <climits>
-#include <queue>
-#include <cctype>
-#include <regex>
-#include <tuple>
 #include <numeric>
-#include <iostream>
-
 std::vector<std::string> readFile(std::string str) {
 	std::vector< std::string > input;
 	std::ifstream inputFile(str);
@@ -49,7 +37,6 @@ AAA = (BBB,CCC)
 return the vector {AAA,BBB,CCC}
 */
 std::vector<std::string> parseLine(std::string line) {
-	//std::cout << "Parsing line " << line << "\n";
 	std::vector<std::string> parsed;
 	auto split = splitString(line, '=');
 	auto node = split[0];
@@ -80,9 +67,6 @@ std::map<std::string, std::pair<std::string, std::string> > generateGraph(std::v
 	}
 	return graph;
 }
-
-
-
 void traverse(std::map<std::string, std::pair<std::string, std::string> > graph, 
 				std::string instructions,std::string start, std::string target) {
 	int step = 0;
@@ -99,7 +83,6 @@ void traverse(std::map<std::string, std::pair<std::string, std::string> > graph,
 	}
 	std::cout << "Reached target after " << step << " steps";
 }
-
 void traverseSimultaneous(std::map<std::string, std::pair<std::string, std::string> > graph,
 	std::string instructions, char start, char target) {
 	//find all nodes ending with A.
@@ -136,9 +119,6 @@ void traverseSimultaneous(std::map<std::string, std::pair<std::string, std::stri
 	}
 	std::cout << least_common_multiple;
 }
-
-
-
 int main(){
 	std::string input = "input.txt";
 	auto data = readFile(input);
@@ -146,7 +126,6 @@ int main(){
 	auto instructions = data[0];
 	std::string start = "AAA";
 	std::string target = "ZZZ";
-	//traverse(graph, instructions, start,target);
 	char start_char = 'A';
 	char target_char = 'Z';
 	traverseSimultaneous(graph, instructions, start_char, target_char);
