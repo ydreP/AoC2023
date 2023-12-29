@@ -261,6 +261,6 @@ int main() {
 	DP.clear();
 	seen.clear();
 	auto undirected = convertToUndirected(dag);
-	cout << longestPath(undirected, start, end, DP, seen) <<endl; // no double counting here, takes a while (<30 min) but it outputs the right answer
+	cout << longestPath(undirected, start, end, DP, seen) <<endl; // no double counting here, takes longer than I want to (~2.5 hours) but it outputs the right answer
 	// correct answer: 6738
 }
